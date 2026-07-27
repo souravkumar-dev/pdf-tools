@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout";
 import MultiDropzone from "../components/pdf/MultiDropzone";
 import { mergePdfs } from "../api/pdfApi";
 import { arrayMove } from "@dnd-kit/sortable";
+import { formatFileSize } from "../utils/formatFileSize";
 
 function Merge() {
   const [files, setFiles] = useState([]);
@@ -57,11 +58,22 @@ function Merge() {
       setLoading(false);
     }
   }
+  const totalSize = files.reduce((sum, item) => sum + item.file.size, 0);
 
   return (
     <Layout>
       <h1 className="text-3xl font-bold mb-8">Merge PDFs</h1>
 
+      {files.length > 0 && (
+        <div className="mb-6 rounded-lg border bg-gray-50 p-4">
+          <p className="font-semibold">{files.length} PDF(s) Selected</p>
+
+          <p className="text-gray-600">
+            Total Size: {formatFileSize(totalSize)}
+          </p>
+        </div>
+      )}
+      
       <MultiDropzone
         files={files}
         onFileSelect={handleFiles}

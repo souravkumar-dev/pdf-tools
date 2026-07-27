@@ -15,13 +15,13 @@ function MultiDropzone({
   onDragEnd,
   title = "Drag PDFs here or click to upload",
 }) {
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, open } = useDropzone({
     accept: {
       "application/pdf": [".pdf"],
     },
     multiple: true,
     maxSize: 52428800,
-
+    noClick: true,
     onDrop: (acceptedFiles) => {
       if (!acceptedFiles.length) return;
 
@@ -37,7 +37,9 @@ function MultiDropzone({
       <input {...getInputProps()} />
 
       {files.length === 0 ? (
-        <p className="text-center">{title}</p>
+        <div onClick={open} className="text-center py-8 cursor-pointer">
+          <p>{title}</p>
+        </div>
       ) : (
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
           <SortableContext
@@ -45,13 +47,26 @@ function MultiDropzone({
             strategy={verticalListSortingStrategy}
           >
             <div className="space-y-3">
-              {files.map((item) => (
+              {files.map((item,index) => (
                 <SortableFileCard
                   key={item.id}
                   item={item}
+                  index={index}
                   onRemove={onRemoveFile}
                 />
               ))}
+            </div>
+            <div className="flex justify-center mt-6">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  open();
+                }}
+                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
+              >
+                + Add More PDFs
+              </button>
             </div>
           </SortableContext>
         </DndContext>

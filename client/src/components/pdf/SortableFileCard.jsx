@@ -1,7 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { formatFileSize } from "../../utils/formatFileSize";
 
-function SortableFileCard({ item, onRemove }) {
+function SortableFileCard({ item, index, onRemove }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: item.id,
@@ -30,10 +31,12 @@ function SortableFileCard({ item, onRemove }) {
         </div>
 
         <div>
-          <p className="font-medium">{item.file.name}</p>
+          <p className="font-medium">
+            {index + 1}. {item.file.name}
+          </p>
 
           <p className="text-sm text-gray-500">
-            {(item.file.size / 1024).toFixed(2)} KB
+            {formatFileSize(item.file.size)}
           </p>
         </div>
       </div>
