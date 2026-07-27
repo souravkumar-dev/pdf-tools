@@ -34,11 +34,22 @@ function Compress() {
     }
   }
 
+  function handleRemoveFile() {
+    setSelectedFile(null);
+    setResult(null);
+
+    toast.success("PDF removed");
+  }
+
   return (
     <Layout>
       <h1 className="text-3xl font-bold mb-8">Compress PDF</h1>
 
-      <Dropzone onFileSelect={handleUpload} />
+      <Dropzone
+        onFileSelect={handleUpload}
+        selectedFile={selectedFile}
+        onRemoveFile={handleRemoveFile}
+      />
 
       <div className="mt-6">
         <button
@@ -49,7 +60,7 @@ function Compress() {
           {loading ? "Compressing..." : "Compress PDF"}
         </button>
       </div>
-      
+
       {result && (
         <div className="mt-8 border rounded-lg p-6 w-full max-w-xl">
           <h2 className="text-2xl font-semibold mb-4">
