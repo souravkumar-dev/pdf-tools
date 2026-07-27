@@ -8,6 +8,7 @@ function Compress() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [quality, setQuality] = useState("balanced");
 
   function handleUpload(file) {
     setSelectedFile(file);
@@ -21,9 +22,13 @@ function Compress() {
 
     try {
       setLoading(true);
-      const data = await compressPdf(selectedFile);
+      const data = await compressPdf(selectedFile, quality);
+
+      console.log("Selected Quality:", quality);
       console.log(data);
+
       setResult(data);
+
       toast.success("PDF compressed successfully");
     } catch (error) {
       console.error(error);
@@ -50,6 +55,59 @@ function Compress() {
         selectedFile={selectedFile}
         onRemoveFile={handleRemoveFile}
       />
+      <div className="mt-6 border rounded-lg p-4">
+        <h2 className="text-lg font-semibold mb-4">Compression Quality</h2>
+
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="quality"
+              value="best"
+              checked={quality === "best"}
+              onChange={(e) => setQuality(e.target.value)}
+            />
+            <div>
+              <p className="font-medium">Best Quality</p>
+              <p className="text-sm text-gray-500">
+                Highest visual quality, larger file
+              </p>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="quality"
+              value="balanced"
+              checked={quality === "balanced"}
+              onChange={(e) => setQuality(e.target.value)}
+            />
+            <div>
+              <p className="font-medium">Balanced (Recommended)</p>
+              <p className="text-sm text-gray-500">
+                Good quality with smaller size
+              </p>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="quality"
+              value="maximum"
+              checked={quality === "maximum"}
+              onChange={(e) => setQuality(e.target.value)}
+            />
+            <div>
+              <p className="font-medium">Maximum Compression</p>
+              <p className="text-sm text-gray-500">
+                Smallest file size, reduced image quality
+              </p>
+            </div>
+          </label>
+        </div>
+      </div>
 
       <div className="mt-6">
         <button

@@ -11,6 +11,9 @@ export async function compressController(req, res) {
         message: "No PDF file uploaded.",
       });
     }
+    const { quality = "balanced" } = req.body;
+
+    console.log("Selected Quality:", quality);
 
     // Uploaded PDF path
     const inputPath = path.resolve(req.file.path);
@@ -25,7 +28,7 @@ export async function compressController(req, res) {
     console.log("Output Path:", outputPath);
 
     // Compress PDF
-    await compressPdf(inputPath, outputPath);
+    await compressPdf(inputPath, outputPath, quality);
 
     console.log("Input Size :", fs.statSync(inputPath).size);
     console.log("Output Size :", fs.statSync(outputPath).size);

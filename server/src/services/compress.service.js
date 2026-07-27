@@ -1,12 +1,21 @@
 import { spawn } from "child_process";
-import path from "path";
 
-export function compressPdf(inputPath, outputPath) {
+export function compressPdf(inputPath, outputPath, quality = "medium") {
+
+  const qualityMap = {
+    best: "/prepress",
+    balanced: "/ebook",
+    maximum: "/screen",
+  };
+
+  const pdfSetting = qualityMap[quality] || qualityMap.medium;
+
   return new Promise((resolve, reject) => {
+
     const args = [
       "-sDEVICE=pdfwrite",
       "-dCompatibilityLevel=1.4",
-      "-dPDFSETTINGS=/ebook",
+      `-dPDFSETTINGS=${pdfSetting}`,
       "-dNOPAUSE",
       "-dQUIET",
       "-dBATCH",
@@ -14,7 +23,9 @@ export function compressPdf(inputPath, outputPath) {
       inputPath,
     ];
 
-    // const gs = spawn("C:\\Program Files\\gs\\gs10.07.1\\bin\\gswin64c.exe", args);
+    console.log("Compression Quality:", quality);
+    console.log("Ghostscript Setting:", pdfSetting);
+
     const gs = spawn(process.env.GHOSTSCRIPT_PATH, args);
 
     let errorOutput = "";
@@ -34,5 +45,7 @@ export function compressPdf(inputPath, outputPath) {
     gs.on("error", (err) => {
       reject(err);
     });
+
   });
+
 }
