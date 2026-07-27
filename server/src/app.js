@@ -9,6 +9,7 @@ import morgan from "morgan";
 import uploadRoutes from "./routes/upload.routes.js";
 import compressRoutes from "./routes/compress.routes.js";
 import downloadRoutes from "./routes/download.routes.js";
+import mergeRoutes from "./routes/merge.routes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(express.json());
 
 app.use("/api/pdf", uploadRoutes);
 app.use("/api/pdf", compressRoutes);
+app.use("/api/pdf", mergeRoutes);
 app.use("/api/pdf", downloadRoutes);
 
 app.get("/", (req, res) => {

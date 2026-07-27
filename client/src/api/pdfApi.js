@@ -16,3 +16,15 @@ export const compressPdf = async (file, quality) => {
 
   return data;
 };
+
+export async function mergePdfs(files) {
+  const formData = new FormData();
+
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
+
+  const {data} = await API.post("/merge", formData);
+
+  return data;
+}

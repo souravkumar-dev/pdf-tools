@@ -15,6 +15,7 @@ function Dropzone({
     maxSize: 52428800,
     noClick: !!selectedFile,
     onDrop: (acceptedFiles) => {
+      console.log("Accepted Files:", acceptedFiles);
       if (!acceptedFiles.length) return;
 
       if (multiple) {

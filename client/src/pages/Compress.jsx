@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import Layout from "../layouts/Layout";
-import Dropzone from "../components/Dropzone";
+import Dropzone from "../components/pdf/Dropzone";
 import { compressPdf } from "../api/pdfApi";
 
 function Compress() {
