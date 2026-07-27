@@ -1,6 +1,8 @@
+import { GripVertical, Trash2 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { formatFileSize } from "../../utils/formatFileSize";
+import Button from "../common/Button";
 
 function SortableFileCard({ item, index, onRemove }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -18,16 +20,16 @@ function SortableFileCard({ item, index, onRemove }) {
       ref={setNodeRef}
       style={style}
       onClick={(e) => e.stopPropagation()}
-      className="flex items-center justify-between border rounded-lg p-4 bg-white shadow-sm"
+      className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-blue-300"
     >
       <div className="flex items-center gap-4">
         <div
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing text-2xl select-none"
+          className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-gray-700"
           title="Drag to reorder"
         >
-          ☰
+          <GripVertical size={22} />
         </div>
 
         <div>
@@ -41,16 +43,15 @@ function SortableFileCard({ item, index, onRemove }) {
         </div>
       </div>
 
-      <button
-        type="button"
+      <Button
+        variant="danger"
         onClick={(e) => {
           e.stopPropagation();
           onRemove(item.id);
         }}
-        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
       >
-        Remove
-      </button>
+        <Trash2 size={18} />
+      </Button>
     </div>
   );
 }

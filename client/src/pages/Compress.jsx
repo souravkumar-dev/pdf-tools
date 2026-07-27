@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import Layout from "../layouts/Layout";
 import Dropzone from "../components/pdf/Dropzone";
 import { compressPdf } from "../api/pdfApi";
+import Button from "../components/common/Button";
+import { Download } from "lucide-react";
 
 function Compress() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -110,13 +112,9 @@ function Compress() {
       </div>
 
       <div className="mt-6">
-        <button
-          onClick={handleCompress}
-          disabled={loading}
-          className="bg-blue-600 text-white px-6 py-2 rounded disabled:bg-gray-400"
-        >
+        <Button onClick={handleCompress} disabled={!selectedFile || loading}>
           {loading ? "Compressing..." : "Compress PDF"}
-        </button>
+        </Button>
       </div>
 
       {result && (
@@ -141,14 +139,10 @@ function Compress() {
             </p>
 
             <div className="mt-6">
-              <a
-                href={`http://localhost:5000${result.downloadUrl}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
-                  Download PDF
-                </button>
+              <a href={`http://localhost:5000${result.downloadUrl}`} download>
+                <Button variant="primary" leftIcon={<Download size={18} />}>
+                  Download Compressed PDF
+                </Button>
               </a>
             </div>
           </div>

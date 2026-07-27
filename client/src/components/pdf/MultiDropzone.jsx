@@ -1,5 +1,6 @@
 import { useDropzone } from "react-dropzone";
 import { DndContext, closestCenter } from "@dnd-kit/core";
+import { Upload } from "lucide-react";
 
 import {
   SortableContext,
@@ -37,8 +38,17 @@ function MultiDropzone({
       <input {...getInputProps()} />
 
       {files.length === 0 ? (
-        <div onClick={open} className="text-center py-8 cursor-pointer">
-          <p>{title}</p>
+        <div
+          onClick={open}
+          className="flex flex-col items-center justify-center py-10 cursor-pointer"
+        >
+          <Upload size={48} className="text-blue-600 mb-4" />
+
+          <h3 className="text-xl font-semibold">Drag & Drop PDFs Here</h3>
+
+          <p className="text-gray-500 mt-2">or click to browse your files</p>
+
+          <p className="text-sm text-gray-400 mt-3">Maximum file size: 50 MB</p>
         </div>
       ) : (
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
@@ -47,7 +57,7 @@ function MultiDropzone({
             strategy={verticalListSortingStrategy}
           >
             <div className="space-y-3">
-              {files.map((item,index) => (
+              {files.map((item, index) => (
                 <SortableFileCard
                   key={item.id}
                   item={item}

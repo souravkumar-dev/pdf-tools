@@ -5,6 +5,8 @@ import MultiDropzone from "../components/pdf/MultiDropzone";
 import { mergePdfs } from "../api/pdfApi";
 import { arrayMove } from "@dnd-kit/sortable";
 import { formatFileSize } from "../utils/formatFileSize";
+import MergeResultCard from "../components/pdf/MergeResultCard";
+import Button from "../components/common/Button";
 
 function Merge() {
   const [files, setFiles] = useState([]);
@@ -19,11 +21,15 @@ function Merge() {
 
     setFiles((prev) => [...prev, ...newFiles]);
 
+    setResult(null);
+
     toast.success(`${selectedFiles.length} PDF(s) added`);
   }
 
   function handleRemove(id) {
     setFiles((prev) => prev.filter((item) => item.id !== id));
+
+    setResult(null);
   }
 
   function handleDragEnd(event) {
@@ -73,7 +79,7 @@ function Merge() {
           </p>
         </div>
       )}
-      
+
       <MultiDropzone
         files={files}
         onFileSelect={handleFiles}
@@ -81,13 +87,14 @@ function Merge() {
         onDragEnd={handleDragEnd}
       />
 
-      <button
+      <Button
         onClick={handleMerge}
         disabled={loading || files.length < 2}
-        className="mt-6 bg-blue-600 text-white px-6 py-2 rounded disabled:bg-gray-400"
+        className="mt-6"
       >
         {loading ? "Merging..." : "Merge PDFs"}
-      </button>
+      </Button>
+      <MergeResultCard result={result} />
     </Layout>
   );
 }

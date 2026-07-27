@@ -1,4 +1,6 @@
 import { useDropzone } from "react-dropzone";
+import { Upload, FileText, Trash2, RefreshCw } from "lucide-react";
+import Button from "../common/Button";
 
 function Dropzone({
   onFileSelect,
@@ -34,41 +36,53 @@ function Dropzone({
       <input {...getInputProps()} />
 
       {!selectedFile ? (
-        <p>{title}</p>
+        <div className="flex flex-col items-center justify-center py-10">
+          <Upload size={48} className="text-blue-600 mb-4" />
+
+          <h3 className="text-xl font-semibold">Drag & Drop PDF Here</h3>
+
+          <p className="text-gray-500 mt-2">or click to browse your file</p>
+
+          <p className="text-sm text-gray-400 mt-3">Maximum file size: 50 MB</p>
+        </div>
       ) : (
-        <div className="space-y-3">
-          <div className="text-5xl">📄</div>
+        <div className="space-y-4 rounded-xl border border-green-200 bg-green-50 p-6">
+          <FileText size={56} className="text-red-500 mx-auto" />
 
-          <h2 className="text-lg font-semibold text-green-600">PDF Selected</h2>
+          <h2 className="text-xl font-bold text-green-700">PDF Selected</h2>
 
-          <p className="font-medium break-all">{selectedFile.name}</p>
+          <p className="font-medium text-gray-800 break-all">
+            {selectedFile.name}
+          </p>
 
-          <p className="text-gray-600">
+          <p className="text-sm text-gray-500">
             {(selectedFile.size / 1024).toFixed(2)} KB
           </p>
 
           <div className="flex justify-center gap-4">
-            <button
+            <Button
               type="button"
+              variant="primary"
+              leftIcon={<RefreshCw size={18} />}
               onClick={(e) => {
                 e.stopPropagation();
                 open();
               }}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Change PDF
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="danger"
+              leftIcon={<Trash2 size={18} />}
               onClick={(e) => {
                 e.stopPropagation();
                 onRemoveFile();
               }}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               Remove PDF
-            </button>
+            </Button>
           </div>
         </div>
       )}
