@@ -27,19 +27,20 @@ export async function compressController(req, res) {
     console.log("Input Path:", inputPath);
     console.log("Output Path:", outputPath);
 
+    const originalSize = fs.statSync(inputPath).size;
+
     // Compress PDF
     await compressPdf(inputPath, outputPath, quality);
+    // fs.unlinkSync(inputPath);
 
-    console.log("Input Size :", fs.statSync(inputPath).size);
+    console.log("Original Size :", originalSize);
     console.log("Output Size :", fs.statSync(outputPath).size);
-
     // return res.status(200).json({
     //     success: true,
     //     message: "PDF compressed successfully.",
     //     fileName: outputFileName,
     // });
 
-    const originalSize = fs.statSync(inputPath).size;
     const compressedSize = fs.statSync(outputPath).size;
 
     const savedBytes = originalSize - compressedSize;
@@ -64,51 +65,3 @@ export async function compressController(req, res) {
     });
   }
 }
-
-// import fs from "fs";
-// import path from "path";
-// import { compressPdf } from "../services/compress.service.js";
-
-// export async function compressController(req, res) {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "No PDF uploaded",
-//       });
-//     }
-//     console.log(req.file);
-
-//     const inputPath = path.resolve(req.file.path);
-
-//     const outputFileName = `compressed-${req.file.filename}`;
-
-//     const outputPath = path.resolve("src", "output", outputFileName);
-
-//     console.log("Input Path :", inputPath);
-//     console.log("Output Path:", outputPath);
-
-//     console.log("Input Exists :", fs.existsSync(inputPath));
-//     console.log("Input Size :", fs.statSync(inputPath).size);
-
-//     await compressPdf(inputPath, outputPath);
-
-//     console.log("Output Exists :", fs.existsSync(outputPath));
-
-//     if (fs.existsSync(outputPath)) {
-//       console.log("Output Size :", fs.statSync(outputPath).size);
-//     }
-
-//     res.json({
-//       success: true,
-//       fileName: outputFileName,
-//     });
-//   } catch (err) {
-//     console.log(err);
-
-//     res.status(500).json({
-//       success: false,
-//       message: err.message,
-//     });
-//   }
-// }

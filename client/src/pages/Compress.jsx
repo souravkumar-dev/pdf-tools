@@ -5,12 +5,14 @@ import Dropzone from "../components/pdf/Dropzone";
 import { compressPdf } from "../api/pdfApi";
 import Button from "../components/common/Button";
 import { Download } from "lucide-react";
+import ProgressBar from "../components/common/ProgressBar";
 
 function Compress() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [quality, setQuality] = useState("balanced");
+  const [progress, setProgress] = useState(0);
 
   function handleUpload(file) {
     setSelectedFile(file);
@@ -24,7 +26,9 @@ function Compress() {
 
     try {
       setLoading(true);
+      setProgress(10);
       const data = await compressPdf(selectedFile, quality);
+      setProgress(100);
 
       console.log("Selected Quality:", quality);
       console.log(data);
@@ -34,10 +38,14 @@ function Compress() {
       toast.success("PDF compressed successfully");
     } catch (error) {
       console.error(error);
+      setProgress(0);
 
       toast.error(error.response?.data?.message || "Compression failed");
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        setProgress(0);
+      }, 500);
     }
   }
 
@@ -115,6 +123,7 @@ function Compress() {
         <Button onClick={handleCompress} disabled={!selectedFile || loading}>
           {loading ? "Compressing..." : "Compress PDF"}
         </Button>
+        {loading && <ProgressBar progress={progress} />}
       </div>
 
       {result && (

@@ -6,6 +6,7 @@ import {
   Zap,
   ShieldCheck,
   Smartphone,
+  Sparkles,
 } from "lucide-react";
 import Layout from "../layouts/Layout";
 import FeatureCard from "../components/common/FeatureCard";
@@ -14,6 +15,10 @@ function Home() {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center gap-6 py-10">
+        <div className="flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
+          <Sparkles size={16} />
+          <span>Fast • Secure • Free</span>
+        </div>
         <div className="flex items-center gap-3">
           <FileText size={42} className="text-red-500" />
 
@@ -79,6 +84,13 @@ function Home() {
             />
           </div>
         </div>
+        <footer className="mt-20 border-t border-gray-200 pt-8 pb-4 text-center text-sm text-gray-500 w-full">
+          <p>© 2026 PDF Tools. All rights reserved.</p>
+
+          <p className="mt-2">
+            Built with React, Node.js, Express.js and Tailwind CSS.
+          </p>
+        </footer>
       </div>
     </Layout>
   );
