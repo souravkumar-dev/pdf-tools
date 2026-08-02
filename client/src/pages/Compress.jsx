@@ -27,7 +27,26 @@ function Compress() {
     try {
       setLoading(true);
       setProgress(10);
-      const data = await compressPdf(selectedFile, quality);
+
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          // if (prev >= 90) return prev;
+          if (prev >= 95) return prev;
+          return prev + Math.floor(Math.random() * 8) + 2;
+        });
+      }, 250);
+
+      // const data = await compressPdf(selectedFile, quality);
+      const data = await compressPdf(selectedFile, quality, (progressEvent) => {
+        if (!progressEvent.total) return;
+
+        const uploadProgress = Math.round(
+          (progressEvent.loaded * 40) / progressEvent.total,
+        );
+
+        setProgress((prev) => (uploadProgress > prev ? uploadProgress : prev));
+      });
+      clearInterval(timer);
       setProgress(100);
 
       console.log("Selected Quality:", quality);
@@ -39,6 +58,7 @@ function Compress() {
     } catch (error) {
       console.error(error);
       setProgress(0);
+      clearInterval(timer);
 
       toast.error(error.response?.data?.message || "Compression failed");
     } finally {

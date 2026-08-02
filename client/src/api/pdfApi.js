@@ -6,13 +6,15 @@ const API = axios.create({
 
 export default API;
 
-export const compressPdf = async (file, quality) => {
+export const compressPdf = async (file, quality, onUploadProgress) => {
   const formData = new FormData();
 
   formData.append("file", file);
   formData.append("quality", quality);
 
-  const { data } = await API.post("/compress", formData);
+  const { data } = await API.post("/compress", formData, {
+    onUploadProgress,
+  });
 
   return data;
 };
@@ -24,7 +26,7 @@ export async function mergePdfs(files) {
     formData.append("files", file);
   });
 
-  const {data} = await API.post("/merge", formData);
+  const { data } = await API.post("/merge", formData);
 
   return data;
 }

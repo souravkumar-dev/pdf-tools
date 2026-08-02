@@ -7,11 +7,13 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { formatFileSize } from "../utils/formatFileSize";
 import MergeResultCard from "../components/pdf/MergeResultCard";
 import Button from "../components/common/Button";
+import ProgressBar from "../components/common/ProgressBar";
 
 function Merge() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [progress, setProgress] = useState(0);
 
   function handleFiles(selectedFiles) {
     const newFiles = selectedFiles.map((file) => ({
@@ -52,16 +54,32 @@ function Merge() {
 
     try {
       setLoading(true);
+      setProgress(10);
+
+      const timer = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 95) return prev;
+          return prev + Math.floor(Math.random() * 8) + 2;
+        });
+      }, 250);
 
       const data = await mergePdfs(files.map((item) => item.file));
+      clearInterval(timer);
+      setProgress(100);
 
       setResult(data);
 
       toast.success("PDFs merged successfully.");
     } catch (error) {
+      clearInterval(timer);
+      setProgress(0);
       toast.error(error.response?.data?.message || "Merge failed");
     } finally {
       setLoading(false);
+
+      setTimeout(() => {
+        setProgress(0);
+      }, 500);
     }
   }
   const totalSize = files.reduce((sum, item) => sum + item.file.size, 0);
@@ -94,6 +112,7 @@ function Merge() {
       >
         {loading ? "Merging..." : "Merge PDFs"}
       </Button>
+      {loading && <ProgressBar progress={progress} />}
       <MergeResultCard result={result} />
     </Layout>
   );
