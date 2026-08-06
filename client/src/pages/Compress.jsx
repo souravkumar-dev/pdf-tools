@@ -6,13 +6,22 @@ import { compressPdf } from "../api/pdfApi";
 import Button from "../components/common/Button";
 import { Download } from "lucide-react";
 import ProgressBar from "../components/common/ProgressBar";
+import useProgress from "../hooks/useProgress";
 
 function Compress() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [quality, setQuality] = useState("balanced");
-  const [progress, setProgress] = useState(0);
+  // const [progress, setProgress] = useState(0);
+  const {
+    progress,
+    setProgress,
+    startProgress,
+    finishProgress,
+    resetProgress,
+    stopProgress,
+  } = useProgress();
 
   function handleUpload(file) {
     setSelectedFile(file);
@@ -23,20 +32,24 @@ function Compress() {
     if (!selectedFile) {
       return toast.error("Please select a PDF first.");
     }
-
+    let timer;
     try {
       setLoading(true);
-      setProgress(10);
 
-      const timer = setInterval(() => {
-        setProgress((prev) => {
-          // if (prev >= 90) return prev;
-          if (prev >= 95) return prev;
-          return prev + Math.floor(Math.random() * 8) + 2;
-        });
-      }, 250);
+      timer = startProgress();
+
+      // setProgress(10);
+
+      // const timer = setInterval(() => {
+      //   setProgress((prev) => {
+      //     // if (prev >= 90) return prev;
+      //     if (prev >= 95) return prev;
+      //     return prev + Math.floor(Math.random() * 8) + 2;
+      //   });
+      // }, 250);
 
       // const data = await compressPdf(selectedFile, quality);
+
       const data = await compressPdf(selectedFile, quality, (progressEvent) => {
         if (!progressEvent.total) return;
 
@@ -46,8 +59,10 @@ function Compress() {
 
         setProgress((prev) => (uploadProgress > prev ? uploadProgress : prev));
       });
-      clearInterval(timer);
-      setProgress(100);
+      // clearInterval(timer);
+      // setProgress(100);
+
+      finishProgress(timer);
 
       console.log("Selected Quality:", quality);
       console.log(data);
@@ -57,15 +72,20 @@ function Compress() {
       toast.success("PDF compressed successfully");
     } catch (error) {
       console.error(error);
-      setProgress(0);
-      clearInterval(timer);
+      // setProgress(0);
+      // clearInterval(timer);
+
+      if (timer) {
+        stopProgress(timer);
+      }
 
       toast.error(error.response?.data?.message || "Compression failed");
     } finally {
       setLoading(false);
-      setTimeout(() => {
-        setProgress(0);
-      }, 500);
+      resetProgress();
+      // setTimeout(() => {
+      //   setProgress(0);
+      // }, 500);
     }
   }
 
