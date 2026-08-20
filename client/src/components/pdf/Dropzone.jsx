@@ -31,7 +31,7 @@ function Dropzone({
   return (
     <div
       {...getRootProps()}
-      className="border-2 border-dashed rounded-lg p-12 text-center cursor-pointer hover:bg-gray-50 transition"
+      className="md:mx-40 border-2 border-dashed rounded-lg p-12 text-center cursor-pointer hover:bg-gray-50 transition"
     >
       <input {...getInputProps()} />
 

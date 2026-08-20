@@ -13,7 +13,6 @@ function Compress() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [quality, setQuality] = useState("balanced");
-  // const [progress, setProgress] = useState(0);
   const {
     progress,
     setProgress,
@@ -38,18 +37,6 @@ function Compress() {
 
       timer = startProgress();
 
-      // setProgress(10);
-
-      // const timer = setInterval(() => {
-      //   setProgress((prev) => {
-      //     // if (prev >= 90) return prev;
-      //     if (prev >= 95) return prev;
-      //     return prev + Math.floor(Math.random() * 8) + 2;
-      //   });
-      // }, 250);
-
-      // const data = await compressPdf(selectedFile, quality);
-
       const data = await compressPdf(selectedFile, quality, (progressEvent) => {
         if (!progressEvent.total) return;
 
@@ -59,8 +46,6 @@ function Compress() {
 
         setProgress((prev) => (uploadProgress > prev ? uploadProgress : prev));
       });
-      // clearInterval(timer);
-      // setProgress(100);
 
       finishProgress(timer);
 
@@ -72,8 +57,6 @@ function Compress() {
       toast.success("PDF compressed successfully");
     } catch (error) {
       console.error(error);
-      // setProgress(0);
-      // clearInterval(timer);
 
       if (timer) {
         stopProgress(timer);
@@ -83,9 +66,6 @@ function Compress() {
     } finally {
       setLoading(false);
       resetProgress();
-      // setTimeout(() => {
-      //   setProgress(0);
-      // }, 500);
     }
   }
 

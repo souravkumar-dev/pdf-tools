@@ -1,6 +1,4 @@
-// import dotenv from "dotenv";
-// dotenv.config();
-// import "./config/env.js";
+
 
 import express from "express";
 import cors from "cors";
@@ -19,9 +17,6 @@ app.use(
   })
 );
 
-// app.use(cors());
-
-// console.log("CLIENT_URL =", process.env.CLIENT_URL);
 
 app.use(helmet());
 app.use(morgan("dev"));

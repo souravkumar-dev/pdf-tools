@@ -8,12 +8,19 @@ import { formatFileSize } from "../utils/formatFileSize";
 import MergeResultCard from "../components/pdf/MergeResultCard";
 import Button from "../components/common/Button";
 import ProgressBar from "../components/common/ProgressBar";
+import useProgress from "../hooks/useProgress";
 
 function Merge() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const {
+    progress,
+    startProgress,
+    finishProgress,
+    resetProgress,
+    stopProgress,
+  } = useProgress();
 
   function handleFiles(selectedFiles) {
     const newFiles = selectedFiles.map((file) => ({
@@ -51,35 +58,25 @@ function Merge() {
     if (files.length < 2) {
       return toast.error("Please select at least 2 PDFs.");
     }
+     const timer = startProgress();
 
     try {
-      setLoading(true);
-      setProgress(10);
 
-      const timer = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 95) return prev;
-          return prev + Math.floor(Math.random() * 8) + 2;
-        });
-      }, 250);
+      setLoading(true);
 
       const data = await mergePdfs(files.map((item) => item.file));
-      clearInterval(timer);
-      setProgress(100);
+      finishProgress(timer);
 
       setResult(data);
 
       toast.success("PDFs merged successfully.");
     } catch (error) {
-      clearInterval(timer);
-      setProgress(0);
+      stopProgress(timer);
       toast.error(error.response?.data?.message || "Merge failed");
     } finally {
       setLoading(false);
 
-      setTimeout(() => {
-        setProgress(0);
-      }, 500);
+      resetProgress();
     }
   }
   const totalSize = files.reduce((sum, item) => sum + item.file.size, 0);
