@@ -12,11 +12,18 @@ export const compressPdf = async (file, quality, onUploadProgress) => {
   formData.append("file", file);
   formData.append("quality", quality);
 
-  const { data } = await API.post("/compress", formData, {
-    onUploadProgress,
-  });
+const response = await API.post("/compress", formData, {
+  onUploadProgress,
+  responseType: "blob",
+});
 
-  return data;
+return {
+  blob: response.data,
+  originalSize: Number(response.headers["x-original-size"]),
+  compressedSize: Number(response.headers["x-compressed-size"]),
+  savedBytes: Number(response.headers["x-saved-bytes"]),
+  savedPercentage: response.headers["x-saved-percentage"],
+};
 };
 
 export async function mergePdfs(files) {

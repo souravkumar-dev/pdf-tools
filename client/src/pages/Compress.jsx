@@ -76,6 +76,24 @@ function Compress() {
     toast.success("PDF removed");
   }
 
+  function handleDownload() {
+    if (!result?.blob) {
+      return toast.error("Compressed PDF is not available.");
+    }
+
+    const url = URL.createObjectURL(result.blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "compressed.pdf";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <Layout>
       <h1 className="text-3xl font-bold mb-8">Compress PDF</h1>
@@ -168,11 +186,13 @@ function Compress() {
             </p>
 
             <div className="mt-6">
-              <a href={`http://localhost:5000${result.downloadUrl}`} download>
-                <Button variant="primary" leftIcon={<Download size={18} />}>
-                  Download Compressed PDF
-                </Button>
-              </a>
+              <Button
+                onClick={handleDownload}
+                variant="primary"
+                leftIcon={<Download size={18} />}
+              >
+                Download Compressed PDF
+              </Button>
             </div>
           </div>
         </div>
