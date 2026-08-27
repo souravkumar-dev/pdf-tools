@@ -14,11 +14,13 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
-     exposedHeaders: [
+    exposedHeaders: [
       "X-Original-Size",
       "X-Compressed-Size",
       "X-Saved-Bytes",
       "X-Saved-Percentage",
+      "X-Total-Files",
+      "X-Merged-Size",
     ],
   })
 );

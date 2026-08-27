@@ -58,16 +58,23 @@ function Merge() {
     if (files.length < 2) {
       return toast.error("Please select at least 2 PDFs.");
     }
-     const timer = startProgress();
+    const timer = startProgress();
 
     try {
-
       setLoading(true);
 
       const data = await mergePdfs(files.map((item) => item.file));
       finishProgress(timer);
 
-      setResult(data);
+      const resultData = {
+        blob: data.blob,
+        totalFiles: files.length,
+        mergedSize: data.blob?.size || 0,
+      };
+
+      console.log("Merge Result:", resultData);
+
+      setResult(resultData);
 
       toast.success("PDFs merged successfully.");
     } catch (error) {

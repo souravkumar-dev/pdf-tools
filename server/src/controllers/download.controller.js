@@ -1,12 +1,25 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 export function downloadController(req, res) {
   try {
-    const { filename } = req.params;
+    const { tempDir, filename } = req.params;
 
-    const filePath = path.resolve("src", "output", filename);
+    // Prevent path traversal
+    const safeTempDir = path.basename(tempDir);
+    const safeFilename = path.basename(filename);
 
+    // Temporary directory path
+    const tempDirectory = path.join(os.tmpdir(), safeTempDir);
+
+    // File path
+    const filePath = path.join(tempDirectory, safeFilename);
+
+    console.log("Download Temp Directory:", tempDirectory);
+    console.log("Download File:", filePath);
+
+    // Check file exists
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({
         success: false,
@@ -14,11 +27,35 @@ export function downloadController(req, res) {
       });
     }
 
-    res.download(filePath);
-  } catch (error) {
-    console.error(error);
+    // Download file
+    res.download(filePath, safeFilename, (error) => {
+      if (error) {
+        console.error("Download Error:", error);
 
-    res.status(500).json({
+        // If headers have not been sent, return an error
+        if (!res.headersSent) {
+          return res.status(500).json({
+            success: false,
+            message: "Failed to download file.",
+          });
+        }
+
+        return;
+      }
+
+      // Delete temporary directory after successful download
+      fs.rm(tempDirectory, { recursive: true, force: true }, (cleanupError) => {
+        if (cleanupError) {
+          console.error("Temporary Directory Cleanup Error:", cleanupError);
+        } else {
+          console.log("Temporary Directory Deleted:", tempDirectory);
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Download Error:", error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
