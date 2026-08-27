@@ -31,7 +31,7 @@ function Dropzone({
   return (
     <div
       {...getRootProps()}
-      className=" border-2 border-dashed rounded-lg p-12 text-center cursor-pointer hover:bg-gray-50 transition"
+      className=" border-2 border-dashed rounded-lg p-3 md:p-12 text-center cursor-pointer hover:bg-gray-50 transition"
     >
       <input {...getInputProps()} />
 
@@ -59,8 +59,9 @@ function Dropzone({
             {(selectedFile.size / 1024).toFixed(2)} KB
           </p>
 
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-2 md:gap-4">
             <Button
+              className="text-sm md:text-base"
               type="button"
               variant="primary"
               leftIcon={<RefreshCw size={18} />}
@@ -73,6 +74,7 @@ function Dropzone({
             </Button>
 
             <Button
+              className="text-sm md:text-base"
               type="button"
               variant="danger"
               leftIcon={<Trash2 size={18} />}
