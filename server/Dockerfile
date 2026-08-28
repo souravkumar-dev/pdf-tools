@@ -7,12 +7,12 @@ RUN apt-get update \
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
+# Install backend dependencies
+COPY server/package*.json ./
 RUN npm install --omit=dev
 
-# Copy application
-COPY . .
+# Copy backend source code
+COPY server/ .
 
 ENV NODE_ENV=production
 
