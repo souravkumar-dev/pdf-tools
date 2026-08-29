@@ -1,13 +1,19 @@
-// import dotenv from "dotenv";
-// dotenv.config();
-
 import multer from "multer";
 import path from "path";
+import os from "os";
+import fs from "fs";
 import { randomUUID } from "crypto";
+
+const uploadDir = path.join(os.tmpdir(), "pdf-tools-uploads");
+
+// Create upload directory if it doesn't exist
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "src/uploads");
+    cb(null, uploadDir);
   },
 
   filename(req, file, cb) {
@@ -24,20 +30,6 @@ const fileFilter = (req, file, cb) => {
 
   cb(null, true);
 };
-
-// const upload = multer({
-//   storage,
-
-//   fileFilter,
-
-//   limits: {
-//     fileSize: Number(process.env.MAX_FILE_SIZE),
-//   },
-// });
-
-// console.log("MAX_FILE_SIZE =", process.env.MAX_FILE_SIZE);
-// console.log("Type =", typeof process.env.MAX_FILE_SIZE);
-// console.log("Parsed =", Number(process.env.MAX_FILE_SIZE));
 
 const upload = multer({
   storage,
